@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sinjoros - Trang chủ</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body class="preload">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">Sinjoros</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="members.html">Thành viên</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+        <li><a href="announcements.html">Thông báo</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Nền sao -->
+  <div class="background" id="stars-background"></div>
+
+  <!-- Tiêu đề -->
+  <header class="main-header animate__animated animate__fadeInDown">
+    <img src="assets/vala.jpg" alt="Sinjoros Logo" class="logo" />
+    <h1>Chào mừng đến với Sinjoros</h1>
+    <p>Cộng đồng Discord đa chiều - nơi hội tụ của sự hỗn loạn, đam mê và sáng tạo.</p>
+  </header>
+
+  <!-- Nội dung chính -->
+  <main class="main-content">
+
+    <section class="card animate__animated animate__zoomIn animate__delay-1s">
+      <h2>Thống kê Server</h2>
+      <p id="member-count">Đang tải dữ liệu...</p>
+    </section>
+
+    <section class="card animate__animated animate__zoomIn animate__delay-2s">
+      <h2>Lịch sử hình thành</h2>
+      <p>Sinjoros được sáng lập từ năm 2024 với mục tiêu ban đầu là nơi giải trí cho bạn bè thân thiết. Trải qua thời gian, Sinjoros đã phát triển thành một cộng đồng mở.</p>
+    </section>
+
+    <section class="card animate__animated animate__zoomIn animate__delay-3s">
+      <h2>Sự kiện nổi bật</h2>
+      <ul>
+        <li>💬 Talk Show Tâm Linh Hàng Tuần</li>
+        <li>🧠 Cuộc thi "AI vs Người"</li>
+        <li>🎉 Event Random Nitro, game, quà bí ẩn</li>
+      </ul>
+    </section>
+
+    <section class="card animate__animated animate__zoomIn animate__delay-4s">
+      <h2>Tầm nhìn</h2>
+      <p>Chúng tôi hướng đến một cộng đồng nơi mọi người cảm thấy tự do thể hiện cá tính, học hỏi kiến thức và giải trí lành mạnh.</p>
+    </section>
+
+    <section class="join-section animate__animated animate__fadeInUp animate__delay-5s">
+      <a href="https://discord.gg/b9sxxTXx7R" class="btn btn-discord" target="_blank">🚪 Tham gia Server Sinjoros</a>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>&copy; 2025 Sinjoros. Powered by Cabaleiro.</footer>
+
+  <!-- Script nền sao -->
+  <script src="js/stars.js"></script>
+
+  <!-- Hiệu ứng tải -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.remove('preload');
+      document.body.classList.add('page-transition');
+    });
+  </script>
+  <script>
+    document.body.classList.add('page-transition'); // khi tải trang
+
+    document.querySelectorAll('a').forEach(link => {
+      const href = link.href;
+      const isInternal = link.hostname === location.hostname && !link.href.endsWith('#');
+      
+      if (isInternal) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.body.classList.remove('page-transition');
+          document.body.classList.add('fade-out');
+
+          setTimeout(() => {
+            window.location.href = href;
+          }, 500); // khớp với animation duration
+        });
+      }
+    });
+  </script>
+
+  <!-- API gọi số lượng thành viên -->
+  <script>
+    fetch("http://localhost:3000/api/membercount")
+      .then(res => {
+        if (!res.ok) throw new Error("API lỗi");
+        return res.json();
+      })
+      .then(data => {
+        document.getElementById("member-count").innerText =
+          `👥 Tổng số thành viên: ${data.total}`;
+      })
+      .catch(err => {
+        console.error("Không thể lấy số lượng thành viên:", err);
+        document.getElementById("member-count").innerText = "Không thể tải dữ liệu.";
+      });
+  </script>
+</body>
+</html>

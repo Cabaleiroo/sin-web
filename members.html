@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sinjoros - Thành viên</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body class="preload">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">Sinjoros</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="members.html">Thành viên</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+        <li><a href="announcements.html">Thông báo</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Nền sao -->
+  <div class="background" id="stars-background"></div>
+
+  <!-- Tiêu đề -->
+  <header class="main-header animate__animated animate__fadeInDown">
+    <h1>Thành viên Sinjoros</h1>
+    <p>Danh sách thành viên thời gian thực từ Discord</p>
+  </header>
+
+  <!-- Bộ lọc role -->
+  <section class="card animate__animated animate__fadeInUp animate__delay-1s">
+    <label for="role-filter">🎯 Lọc theo vai trò:</label>
+    <select id="role-filter">
+      <option value="all">Tất cả</option>
+    </select>
+  </section>
+
+  <!-- Danh sách thành viên -->
+  <main class="main-content">
+    <section class="card animate__animated animate__zoomIn animate__delay-2s">
+      <h2>🟢 Online</h2>
+      <div id="online-members" class="members-grid"></div>
+    </section>
+
+    <section class="card animate__animated animate__zoomIn animate__delay-3s">
+      <h2>⚪ Offline</h2>
+      <div id="offline-members" class="members-grid"></div>
+    </section>
+  </main>
+
+  <footer>&copy; 2025 Sinjoros. Powered by Cabaleiro.</footer>
+
+  <!-- Nền sao -->
+  <script src="js/stars.js"></script>
+
+  <!-- Tải dữ liệu và lọc -->
+  <script>
+    let fullData = [];
+
+    function renderMembers(data) {
+      const online = document.getElementById("online-members");
+      const offline = document.getElementById("offline-members");
+      online.innerHTML = "";
+      offline.innerHTML = "";
+
+      data.forEach((member, index) => {
+        const card = document.createElement("div");
+        card.className = "card member animate__animated animate__fadeInUp";
+        card.style.animationDelay = `${index * 50}ms`;
+        card.innerHTML = `
+          <img src="${member.avatar}" alt="${member.username}" class="logo" style="width:60px;height:60px;margin-bottom:10px;">
+          <h3>${member.username}#${member.discriminator}</h3>
+          <p>Trạng thái: <strong>${member.status}</strong></p>
+          <p>Ngày tham gia: ${new Date(member.joinedAt).toLocaleDateString()}</p>
+          <p>Vai trò: ${member.roles.length > 0 ? member.roles.join(", ") : "Không có vai trò"}</p>
+        `;
+        if (member.status === 'online') {
+          online.appendChild(card);
+        } else {
+          offline.appendChild(card);
+        }
+      });
+    }
+
+    function filterByRole(role) {
+      if (role === "all") {
+        renderMembers(fullData);
+      } else {
+        const filtered = fullData.filter(m => m.roles.includes(role));
+        renderMembers(filtered);
+      }
+    }
+
+    fetch("http://localhost:3000/api/members")
+      .then(res => res.json())
+      .then(data => {
+        fullData = data;
+
+        // Tạo danh sách vai trò
+        const roleSet = new Set();
+        data.forEach(m => m.roles.forEach(r => roleSet.add(r)));
+        const select = document.getElementById("role-filter");
+
+        [...roleSet].sort().forEach(role => {
+          const opt = document.createElement("option");
+          opt.value = role;
+          opt.textContent = role;
+          select.appendChild(opt);
+        });
+
+        // Render lần đầu
+        renderMembers(fullData);
+
+        // Lọc theo role
+        select.addEventListener("change", e => {
+          filterByRole(e.target.value);
+        });
+      })
+      .catch(err => {
+        document.getElementById("online-members").innerText = "Không thể tải dữ liệu.";
+        console.error(err);
+      });
+  </script>
+
+  <!-- Hiệu ứng chuyển trang -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.remove('preload');
+      document.body.classList.add('page-transition');
+    });
+  </script>
+  <script>
+    document.body.classList.add('page-transition'); // khi tải trang
+
+    document.querySelectorAll('a').forEach(link => {
+      const href = link.href;
+      const isInternal = link.hostname === location.hostname && !link.href.endsWith('#');
+      
+      if (isInternal) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.body.classList.remove('page-transition');
+          document.body.classList.add('fade-out');
+
+          setTimeout(() => {
+            window.location.href = href;
+          }, 500); // khớp với animation duration
+        });
+      }
+    });
+  </script>
+</body>
+</html>
