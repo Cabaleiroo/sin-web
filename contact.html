@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Liên hệ - Sinjoros</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body class="preload">
 <nav class="navbar">
   <div class="nav-container">
     <a href="index.html" class="nav-logo">Sinjoros</a>
-    <ul class="nav-links">
+    <div class="nav-toggle" id="nav-toggle">☰</div>
+    <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Trang chủ</a></li>
       <li><a href="members.html">Thành viên</a></li>
       <li><a href="contact.html">Liên hệ</a></li>
@@ -18,24 +20,25 @@
     </ul>
   </div>
 </nav>
+
 <div class="background" id="stars-background"></div>
 <div class="main-header">
   <h1>Liên hệ với chúng tôi</h1>
 </div>
 <main class="main-content">
-  <section class="card">
+  <section class="card animate__animated animate__fadeInUp animate__delay-0s">
     <h2>Tham gia server Discord</h2>
     <img src="assets/vala.jpg" alt="Discord" class="logo" />
     <p>Hội người mọi</p>
     <a href="https://discord.gg/b9sxxTXx7R" class="btn btn-discord" target="_blank">Tham gia ngay</a>
   </section>
-  <section class="card">
+  <section class="card animate__animated animate__fadeInUp animate__delay-1s">
     <h2>Follow admin trên Instagram</h2>
     <img src="assets/avatar.webp" alt="Avatar" class="logo" />
     <p>@onlyfans.sonh</p>
     <a href="https://instagram.com/onlyfans.sonh" class="btn" target="_blank" style="background: linear-gradient(45deg, #feda75, #d62976, #962fbf, #4f5bd5);">Mở Instagram</a>
   </section>
-  <section class="card">
+  <section class="card animate__animated animate__fadeInUp animate__delay-2s">
     <h2>Đăng ký nhận thông báo</h2>
     <form id="subscribe-form">
       <input type="email" id="email-input" placeholder="Nhập Gmail của bạn..." required style="padding:10px;width:80%;max-width:300px;" />
@@ -43,13 +46,23 @@
       <button type="submit" class="btn">Đăng ký</button>
     </form>
   </section>
-  <section class="card">
+  <section class="card animate__animated animate__fadeInUp animate__delay-3s">
     <h2>Liên hệ trực tiếp qua Gmail</h2>
     <p>Email: <a href="mailto:hts0510.work@gmail.com" style="color: #ffffff;">hts0510.work@gmail.com</a></p>
   </section>
 </main>
 <footer>&copy; 2025 Sinjoros</footer>
 <script src="js/stars.js"></script>
+<script>
+    function updateBackgroundHeight() {
+      const bg = document.getElementById("stars-background");
+      bg.style.height = `${document.body.scrollHeight}px`;
+    }
+
+    window.addEventListener("load", updateBackgroundHeight);
+    window.addEventListener("resize", updateBackgroundHeight);
+    window.addEventListener("scroll", updateBackgroundHeight);
+  </script>
 <script>
   document.getElementById('subscribe-form').addEventListener('submit', e => {
     e.preventDefault();
@@ -65,6 +78,12 @@
   });
 
 </script>
+<script>
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    document.getElementById("nav-links").classList.toggle("show");
+  });
+</script>
+
 <script>
   document.body.classList.add('page-transition'); // khi tải trang
 
@@ -83,6 +102,11 @@
         }, 500); // khớp với animation duration
       });
     }
+  });
+</script>
+<script>
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    document.getElementById("nav-links").classList.toggle("show");
   });
 </script>
 </body>
