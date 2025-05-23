@@ -12,7 +12,8 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo">Sinjoros</a>
-      <ul class="nav-links">
+      <div class="nav-toggle" id="nav-toggle">☰</div>
+      <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Trang chủ</a></li>
         <li><a href="members.html">Thành viên</a></li>
         <li><a href="contact.html">Liên hệ</a></li>
@@ -20,6 +21,13 @@
       </ul>
     </div>
   </nav>
+
+  <script>
+    document.getElementById("nav-toggle").addEventListener("click", () => {
+      document.getElementById("nav-links").classList.toggle("show");
+    });
+  </script>
+
 
   <!-- Nền sao -->
   <div class="background" id="stars-background"></div>
@@ -31,7 +39,7 @@
   </header>
 
   <!-- Bộ lọc role -->
-  <section class="card animate__animated animate__fadeInUp animate__delay-1s">
+  <section class="card animate__animated animate__fadeInUp animate__delay-0s">
     <label for="role-filter">🎯 Lọc theo vai trò:</label>
     <select id="role-filter">
       <option value="all">Tất cả</option>
@@ -40,12 +48,12 @@
 
   <!-- Danh sách thành viên -->
   <main class="main-content">
-    <section class="card animate__animated animate__zoomIn animate__delay-2s">
+    <section class="card animate__animated animate__zoomIn animate__delay-1s">
       <h2>🟢 Online</h2>
       <div id="online-members" class="members-grid"></div>
     </section>
 
-    <section class="card animate__animated animate__zoomIn animate__delay-3s">
+    <section class="card animate__animated animate__zoomIn animate__delay-2s">
       <h2>⚪ Offline</h2>
       <div id="offline-members" class="members-grid"></div>
     </section>
@@ -55,6 +63,16 @@
 
   <!-- Nền sao -->
   <script src="js/stars.js"></script>
+  <script>
+    function updateBackgroundHeight() {
+      const bg = document.getElementById("stars-background");
+      bg.style.height = `${document.body.scrollHeight}px`;
+    }
+
+    window.addEventListener("load", updateBackgroundHeight);
+    window.addEventListener("resize", updateBackgroundHeight);
+    window.addEventListener("scroll", updateBackgroundHeight);
+  </script>
 
   <!-- Tải dữ liệu và lọc -->
   <script>
@@ -150,6 +168,11 @@
           }, 500); // khớp với animation duration
         });
       }
+    });
+  </script>
+  <script>
+    document.getElementById("nav-toggle").addEventListener("click", () => {
+      document.getElementById("nav-links").classList.toggle("show");
     });
   </script>
 </body>
