@@ -12,7 +12,8 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo">Sinjoros</a>
-      <ul class="nav-links">
+      <div class="nav-toggle" id="nav-toggle">☰</div>
+      <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Trang chủ</a></li>
         <li><a href="members.html">Thành viên</a></li>
         <li><a href="contact.html">Liên hệ</a></li>
@@ -20,6 +21,15 @@
       </ul>
     </div>
   </nav>
+
+  <script>
+    document.getElementById("nav-toggle").addEventListener("click", () => {
+      document.getElementById("nav-links").classList.toggle("show");
+    });
+  </script>
+
+
+
 
   <!-- Nền sao -->
   <div class="background" id="stars-background"></div>
@@ -75,6 +85,17 @@
 
   <!-- Script nền sao -->
   <script src="js/stars.js"></script>
+  <script>
+    function updateBackgroundHeight() {
+      const bg = document.getElementById("stars-background");
+      bg.style.height = `${document.body.scrollHeight}px`;
+    }
+
+    window.addEventListener("load", updateBackgroundHeight);
+    window.addEventListener("resize", updateBackgroundHeight);
+    window.addEventListener("scroll", updateBackgroundHeight);
+  </script>
+
 
   <!-- Hiệu ứng tải -->
   <script>
@@ -120,5 +141,11 @@
         document.getElementById("member-count").innerText = "Không thể tải dữ liệu.";
       });
   </script>
+  <script>
+    document.getElementById("nav-toggle").addEventListener("click", () => {
+      document.getElementById("nav-links").classList.toggle("show");
+    });
+  </script>
+
 </body>
 </html>
