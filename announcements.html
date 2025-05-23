@@ -3,149 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sinjoros - Trang chủ</title>
+  <title>Thông báo - Sinjoros</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body class="preload">
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="nav-logo">Sinjoros</a>
-      <div class="nav-toggle" id="nav-toggle">☰</div>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="index.html">Trang chủ</a></li>
-        <li><a href="members.html">Thành viên</a></li>
-        <li><a href="contact.html">Liên hệ</a></li>
-        <li><a href="announcements.html">Thông báo</a></li>
-      </ul>
-    </div>
-  </nav>
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">Sinjoros</a>
+    <div class="nav-toggle" id="nav-toggle">☰</div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Trang chủ</a></li>
+      <li><a href="members.html">Thành viên</a></li>
+      <li><a href="contact.html">Liên hệ</a></li>
+      <li><a href="announcements.html">Thông báo</a></li>
+    </ul>
+  </div>
+</nav>
 
-  <script>
-    document.getElementById("nav-toggle").addEventListener("click", () => {
-      document.getElementById("nav-links").classList.toggle("show");
+<div class="background" id="stars-background"></div>
+<div class="main-header">
+  <h1>Thông báo & Sự kiện</h1>
+</div>
+<main class="main-content animate__animated animate__fadeInUp animate__delay-0s">
+  <form id="announcement-form" class="card announce-form">
+    <input type="text" id="title" placeholder="Tiêu đề..." required />
+    <textarea id="content" placeholder="Nội dung..." required></textarea>
+    <button type="submit" class="btn">Đăng thông báo</button>
+  </form>
+
+  <div id="announcements-list"></div>
+</main>
+<footer>&copy; 2025 Sinjoros</footer>
+<script src="js/stars.js"></script>
+<script>
+  function updateBackgroundHeight() {
+    const bg = document.getElementById("stars-background");
+    bg.style.height = `${document.body.scrollHeight}px`;
+  }
+
+  window.addEventListener("load", updateBackgroundHeight);
+  window.addEventListener("resize", updateBackgroundHeight);
+  window.addEventListener("scroll", updateBackgroundHeight);
+</script>
+
+<script>
+  const owner = true; // đổi thành false để test vai trò người thường
+  const form = document.getElementById("announcement-form");
+  const list = document.getElementById("announcements-list");
+  let announcements = JSON.parse(localStorage.getItem("announcements") || "[]");
+
+  function render() {
+    list.innerHTML = "";
+    announcements.forEach((a, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h3>${a.title}</h3>
+        <p>${a.content}</p>
+        <small>${a.date}</small>
+        ${owner ? '<button onclick="remove(' + i + ')" class="btn delete-btn">Xóa</button>' : ''}
+
+      `;
+      list.appendChild(card);
     });
-  </script>
+  }
 
+  function remove(index) {
+    announcements.splice(index, 1);
+    localStorage.setItem("announcements", JSON.stringify(announcements));
+    render();
+  }
 
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const title = document.getElementById("title").value;
+    const content = document.getElementById("content").value;
+    announcements.push({ title, content, date: new Date().toLocaleString() });
+    localStorage.setItem("announcements", JSON.stringify(announcements));
+    form.reset();
+    render();
+  });
 
+  render();
+</script>
+<script>
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    document.getElementById("nav-links").classList.toggle("show");
+  });
+</script>
 
-  <!-- Nền sao -->
-  <div class="background" id="stars-background"></div>
+<script>
+  document.body.classList.add('page-transition'); // khi tải trang
 
-  <!-- Tiêu đề -->
-  <header class="main-header animate__animated animate__fadeInDown">
-    <img src="assets/vala.jpg" alt="Sinjoros Logo" class="logo" />
-    <h1>Chào mừng đến với Sinjoros</h1>
-    <p>Cộng đồng Discord đa chiều - nơi hội tụ của sự hỗn loạn, đam mê và sáng tạo.</p>
-  </header>
+  document.querySelectorAll('a').forEach(link => {
+    const href = link.href;
+    const isInternal = link.hostname === location.hostname && !link.href.endsWith('#');
+    
+    if (isInternal) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.body.classList.remove('page-transition');
+        document.body.classList.add('fade-out');
 
-  <!-- Nội dung chính -->
-  <main class="main-content">
-
-    <section class="card animate__animated animate__zoomIn animate__delay-1s">
-      <h2>Thống kê Server</h2>
-      <p>Tên server: Hội người mọi</p>
-      <p>Tên thật: Sinjoros</p>
-      <p id="member-count">Đang tải dữ liệu...</p>
-    </section>
-
-    <section class="card animate__animated animate__zoomIn animate__delay-2s">
-      <h2>Lịch sử hình thành</h2>
-      <p>Sinjoros được sáng lập từ năm 2024 với mục tiêu ban đầu là nơi giải trí cho bạn bè thân thiết. Trải qua thời gian, Sinjoros đã phát triển thành một cộng đồng mở.</p>
-      <p>Ban đầu server được sáng lập năm 2020, lấy tên gốc là OCT, viết tắt của On Chan Team, với mục đích ban đầu là 1 server dành riêng cho nhóm bạn bè chơi thân và hoạt động chủ yếu trên nền tảng PUBG mobile</p>
-      <p>Sau đó, server đổi tên thành Chợ Đầu Mối Hoa Quả 1 năm sau ngày thành lập. Lúc đó, các thành viên của server lấy biệt danh cho mình là tên của các loại hoa quả</p>
-      <p>Tuy nhiên sau vài tháng server đã tạm dừng hoạt động do các thành viên mỗi người có công việc riêng cần chuyên tâm</p>
-      <p>Và sau 2 năm, server đã chính thức đi vào hoạt động trở lại với tên mới đổi thành Sinjoros, mục đích mới là không dành riêng cho nhóm bạn bè nữa mà mở rộng phạm vi cho mọi người từ khắp nơi tham gia...</p>
-      <p>Server có tên là "Hội người mọi" (Tên thật là Sinjoros) hiện tại chính là kết quả cho sự nỗ lực gây dựng của nhóm bạn thân năm xưa (gợi ý cho bạn đó là nhóm này gồm có 8 thành viên)</p>
-    </section>
-
-    <section class="card animate__animated animate__zoomIn animate__delay-3s">
-      <h2>Sự kiện nổi bật</h2>
-      <p>💬 Talk Show mỗi tối</p>
-      <p>🧠 Leo rank tối thứ 7 hàng tuần</p>
-      <p>🎉 Các sự kiện có thưởng như: giveaway, bóc túi mù,...</p>
-      <p>🍵 Sự kiện offline mỗi cuối tháng</p>
-    </section>
-
-    <section class="card animate__animated animate__zoomIn animate__delay-4s">
-      <h2>Mục tiêu</h2>
-      <p>Bọn mình mong muốn tạo ra nơi mà tất cả các thành viên tham gia đều có thể trò chuyện vô tư với nhau. Ngoài ra còn có thể học hỏi, giao lưu, giải trí lành mạnh...</p>
-    </section>
-
-    <section class="join-section animate__animated animate__fadeInUp animate__delay-5s">
-      <a href="https://discord.gg/b9sxxTXx7R" class="btn btn-discord" target="_blank">Tham gia Server Sinjoros</a>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer>&copy; 2025 Sinjoros. Powered by Cabaleiro.</footer>
-
-  <!-- Script nền sao -->
-  <script src="js/stars.js"></script>
-  <script>
-    function updateBackgroundHeight() {
-      const bg = document.getElementById("stars-background");
-      bg.style.height = `${document.body.scrollHeight}px`;
-    }
-
-    window.addEventListener("load", updateBackgroundHeight);
-    window.addEventListener("resize", updateBackgroundHeight);
-    window.addEventListener("scroll", updateBackgroundHeight);
-  </script>
-
-
-  <!-- Hiệu ứng tải -->
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      document.body.classList.remove('preload');
-      document.body.classList.add('page-transition');
-    });
-  </script>
-  <script>
-    document.body.classList.add('page-transition'); // khi tải trang
-
-    document.querySelectorAll('a').forEach(link => {
-      const href = link.href;
-      const isInternal = link.hostname === location.hostname && !link.href.endsWith('#');
-      
-      if (isInternal) {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          document.body.classList.remove('page-transition');
-          document.body.classList.add('fade-out');
-
-          setTimeout(() => {
-            window.location.href = href;
-          }, 500); // khớp với animation duration
-        });
-      }
-    });
-  </script>
-
-  <!-- API gọi số lượng thành viên -->
-  <script>
-    fetch("http://localhost:3000/api/membercount")
-      .then(res => {
-        if (!res.ok) throw new Error("API lỗi");
-        return res.json();
-      })
-      .then(data => {
-        document.getElementById("member-count").innerText =
-          `👥 Tổng số thành viên: ${data.total}`;
-      })
-      .catch(err => {
-        console.error("Không thể lấy số lượng thành viên:", err);
-        document.getElementById("member-count").innerText = "Không thể tải dữ liệu.";
+        setTimeout(() => {
+          window.location.href = href;
+        }, 500); // khớp với animation duration
       });
-  </script>
-  <script>
-    document.getElementById("nav-toggle").addEventListener("click", () => {
-      document.getElementById("nav-links").classList.toggle("show");
-    });
-  </script>
-
+    }
+  });
+</script>
+<script>
+  document.getElementById("nav-toggle").addEventListener("click", () => {
+    document.getElementById("nav-links").classList.toggle("show");
+  });
+</script>
 </body>
 </html>
